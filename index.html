@@ -529,16 +529,20 @@
         </div>
         <div>
           <div class="flex items-center gap-1.5">
-            <h3 class="text-xs sm:text-sm font-black tracking-tight">Asisten AI Distribusi SMB</h3>
-            <span class="px-2 py-0.5 rounded-full text-[9px] font-black bg-cyan-500/20 text-cyan-300 border border-cyan-500/40">ONLINE</span>
+            <h3 class="text-xs sm:text-sm font-black tracking-tight">Agentic AI SMB</h3>
+            <span id="aiEngineBadge" class="px-2 py-0.5 rounded-full text-[9px] font-black bg-cyan-500/20 text-cyan-300 border border-cyan-500/40">GEMINI 2.5</span>
           </div>
-          <p class="text-[10px] theme-muted font-medium">Tanya alokasi & langsung lihat poligon di peta</p>
+          <p class="text-[10px] theme-muted font-medium">Telaah data, asal bibit, kuota & kontrol peta</p>
         </div>
       </div>
-      <div class="flex items-center gap-1.5">
+      <div class="flex items-center gap-1">
+        <button onclick="toggleApiKeyPanel()" title="Pengaturan Gemini API Key"
+                class="px-2 py-1 rounded-xl theme-sub border flex items-center gap-1 text-[11px] font-bold text-amber-300 hover:text-white active:scale-95 transition">
+          🔑 <span class="hidden xs:inline">API</span>
+        </button>
         <button onclick="toggleAiSidebar(false); showToast('🗺️ Ketuk Tanya AI kapan saja untuk lanjut chat')" title="Intip Peta"
-                class="px-2.5 py-1 rounded-xl theme-sub border flex items-center gap-1 text-[11px] font-bold text-cyan-300 hover:text-white active:scale-95 transition">
-          🗺️ <span class="hidden xs:inline">Intip Peta</span>
+                class="px-2 py-1 rounded-xl theme-sub border flex items-center gap-1 text-[11px] font-bold text-cyan-300 hover:text-white active:scale-95 transition">
+          🗺️
         </button>
         <button onclick="clearChatHistory()" title="Bersihkan Chat"
                 class="w-7 h-7 rounded-xl theme-sub border flex items-center justify-center text-xs hover:text-rose-400 active:scale-95 transition">
@@ -551,25 +555,47 @@
       </div>
     </div>
 
+    <!-- Collapsible Gemini API Key Configuration Bar -->
+    <div id="aiApiKeyPanel" class="hidden theme-sub border-b p-3 space-y-2 shrink-0">
+      <div class="flex items-center justify-between">
+        <span class="text-[11px] font-extrabold text-amber-300 flex items-center gap-1">🔑 Konfigurasi Google Gemini API Key</span>
+        <button onclick="toggleApiKeyPanel()" class="text-xs theme-muted hover:text-white">✕</button>
+      </div>
+      <p class="text-[10px] theme-muted leading-relaxed">
+        Disimpan aman di browser perangkat ini (<code class="text-cyan-300">localStorage</code>) agar tidak terekspos di repositori publik.
+      </p>
+      <div class="flex items-center gap-1.5">
+        <input type="password" id="geminiApiKeyInput" placeholder="Tempel AIzaSy... di sini"
+               class="flex-1 px-2.5 py-1.5 rounded-xl theme-card border text-xs font-mono focus:outline-none focus:border-cyan-400" />
+        <button onclick="saveGeminiApiKey()"
+                class="px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-extrabold shadow active:scale-95 transition">
+          Simpan
+        </button>
+      </div>
+    </div>
+
     <!-- Quick Suggestion Prompt Chips -->
     <div class="theme-sub border-b px-2.5 py-2 shrink-0 overflow-x-auto no-scrollbar flex items-center gap-1.5">
       <span class="text-[9px] theme-muted font-black uppercase shrink-0">Contoh:</span>
-      <button onclick="submitAiPrompt('Bibit Feri 1 kirim kemana saja?')"
+      <button onclick="submitAiPrompt('Bibit Feri 10 kirim kemana saja dan berapa total ritnya?')"
               class="px-2.5 py-1 rounded-xl theme-card border text-[10px] font-bold text-cyan-300 hover:border-cyan-400 active:scale-95 shrink-0 transition">
-        🌾 Feri 1 kirim kemana?
+        🌾 Feri 10 kirim kemana?
       </button>
-      <button onclick="submitAiPrompt('Kebun Sriyanto bibit darimana ya?')"
+      <button onclick="submitAiPrompt('Kebun Sriyanto dan Andi Saputra bibitnya berasal dari mana?')"
               class="px-2.5 py-1 rounded-xl theme-card border text-[10px] font-bold text-emerald-300 hover:border-emerald-400 active:scale-95 shrink-0 transition">
-        🌱 Sriyanto dari mana?
+        🌱 Asal bibit Sriyanto & Andi
       </button>
-      <button onclick="submitAiPrompt('Plot prioritas exp nov apa saja?')" class="px-2.5 py-1 rounded-xl theme-card border text-[10px] font-bold text-amber-300 hover:border-amber-400 active:scale-95 shrink-0 transition">🔥 Exp Nov?</button>
-      <button onclick="submitAiPrompt('Berapa sisa kuota Agus?')"
+      <button onclick="submitAiPrompt('Analisis plot prioritas exp November dan kenapa harus didahulukan')"
+              class="px-2.5 py-1 rounded-xl theme-card border text-[10px] font-bold text-amber-300 hover:border-amber-400 active:scale-95 shrink-0 transition">
+        🔥 Telaah Exp Nov
+      </button>
+      <button onclick="submitAiPrompt('Bandingkan sisa kuota semua penangkar saat ini')"
               class="px-2.5 py-1 rounded-xl theme-card border text-[10px] font-bold text-purple-300 hover:border-purple-400 active:scale-95 shrink-0 transition">
-        📊 Sisa Agus
+        📊 Bandingkan Kuota
       </button>
-      <button onclick="submitAiPrompt('Siapa saja petani di atas 5 Ha?')"
+      <button onclick="submitAiPrompt('Ada berapa petani yang disuplai dari Luar Kelompok (Eksternal)? Sorot di peta!')"
               class="px-2.5 py-1 rounded-xl theme-card border text-[10px] font-bold text-rose-300 hover:border-rose-400 active:scale-95 shrink-0 transition">
-        ⚠️ Petani > 5 Ha
+        🔍 Audit Eksternal
       </button>
     </div>
 
@@ -580,12 +606,9 @@
           🤖
         </div>
         <div class="theme-card border rounded-2xl rounded-tl-sm p-3 space-y-1.5 shadow-sm text-xs leading-relaxed">
-          <div class="font-extrabold text-cyan-400">Halo! Saya Asisten AI Lapangan</div>
-          <p>Tanyakan alokasi bibit tebu, dan sistem akan langsung **menyorot poligon kebun terkait di peta**!</p>
-          <div class="theme-sub p-2 rounded-xl border text-[11px] font-mono space-y-0.5">
-            <div>• <i>"Bibit Feri 1 kirim kemana saja?"</i></div>
-            <div>• <i>"Kebun Sriyanto bibit darimana ya?"</i></div>
-          </div>
+          <div class="font-extrabold text-cyan-400">Halo! Saya Agentic AI Distribusi SMB 2026</div>
+          <p>Saya terhubung dengan <b>Gemini 2.5 Flash</b> dan membaca seluruh data 112 poligon, 42 petani, 29 plot SMB, serta neraca 4 penangkar secara *real-time*.</p>
+          <p class="text-[11px] theme-muted">Klik tombol <b>🔑 API</b> di kanan atas untuk memasukkan Gemini API Key Anda, lalu tanyakan analisis data, asal bibit, atau minta saya menyorot poligon di peta!</p>
         </div>
       </div>
     </div>
@@ -595,12 +618,12 @@
       <form onsubmit="handleAiSubmit(event)" class="flex items-center gap-1.5">
         <div class="relative flex-1">
           <input type="text" id="aiInputPrompt" autocomplete="off"
-                 placeholder="Tanya misal: bibit feri 1 kirim kemana?..."
+                 placeholder="Tanya asal bibit, analisis kuota, atau diskusi..."
                  class="w-full pl-3 pr-7 py-2 rounded-xl theme-sub border text-xs font-medium focus:outline-none focus:border-cyan-500 shadow-inner" />
           <button type="button" onclick="document.getElementById('aiInputPrompt').value=''"
                   class="absolute inset-y-0 right-2 flex items-center text-xs theme-muted">✕</button>
         </div>
-        <button type="submit"
+        <button type="submit" id="aiSubmitBtn"
                 class="h-9 px-3 rounded-xl bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 text-white font-extrabold text-xs flex items-center gap-1 shadow active:scale-95 transition shrink-0">
           <span>Kirim</span>
           <span>➤</span>
@@ -1039,12 +1062,26 @@
       showToast('Filter kode SMB dibersihkan');
     }
 
-    // HIGHLIGHT MULTIPLE POLYGONS DIRECTLY FROM AI ASSISTANT
+ // HIGHLIGHT MULTIPLE POLYGONS DIRECTLY FROM AI ASSISTANT
     function highlightMultiplePolygonsOnMap(polyIds, label) {
       if (!polyIds || polyIds.length === 0) return;
 
       if (activeTab !== 'map') {
         switchMainTab('map');
+      }
+
+      // Reset filter peta terlebih dahulu jika poligon target tersembunyi oleh filter aktif
+      if (mapFilter !== 'ALL' || targetSmbFilter !== null) {
+        mapFilter = 'ALL';
+        targetSmbFilter = null;
+        document.querySelectorAll('[id^="mapChip-"]').forEach(btn => {
+          btn.className = 'px-3 py-1.5 rounded-xl text-xs font-bold theme-sub border shrink-0 transition active:scale-95';
+        });
+        const allBtn = document.getElementById('mapChip-ALL');
+        if (allBtn) {
+          allBtn.className = 'px-3 py-1.5 rounded-xl text-xs font-extrabold bg-emerald-600 text-white shadow-md border border-emerald-500 shrink-0';
+        }
+        renderMapLayers(false);
       }
 
       if (activeBeaconMarker) {
@@ -1090,14 +1127,22 @@
       });
 
       if (bounds.isValid()) {
-        map.fitBounds(bounds, { padding: [40, 40] });
+        map.fitBounds(bounds, { padding: [45, 45] });
+      }
+
+      // Jika hanya 1 poligon yang disorot, buka juga kartu detail ringkasnya
+      if (polyIds.length === 1) {
+        const singlePoly = POLYGONS.find(x => x.id === polyIds[0]);
+        if (singlePoly) {
+          selectedPolyId = singlePoly.id;
+          openActivePolyCard(singlePoly);
+        }
       }
 
       document.getElementById('activeSmbNotice').classList.remove('hidden');
       document.getElementById('activeSmbNoticeCode').innerText = label || polyIds.join(', ');
-      showToast('📍 Menyorot ' + polyIds.length + ' bidang tujuan di peta');
+      showToast('📍 AI menyorot ' + polyIds.length + ' bidang di peta');
     }
-
     // TAB 2: LOKASI TANAM LOGIC
     function setTanamSubView(view) {
       tanamSubView = view;
@@ -1553,14 +1598,60 @@
       showToast(checked ? '✅ Status pengiriman disimpan: TERKIRIM' : 'Status pengiriman dibatalkan');
     }
 
+   // ==========================================
+    // AGENTIC AI ASSISTANT (GEMINI 2.5 FLASH + DASHBOARD CONTROLLER)
     // ==========================================
-    // AGENTIC AI ASSISTANT SLIDE-OVER SIDEBAR LOGIC
-    // ==========================================
+    const DEFAULT_GEMINI_API_KEY = ""; // Opsional: isi jika dipakai lokal, atau masukkan lewat tombol 🔑 API di UI
+    const GEMINI_MODEL = "gemini-2.5-flash";
+    let aiChatHistory = []; // Menyimpan memori percakapan multi-turn
+
+    function getGeminiApiKey() {
+      return localStorage.getItem('smb_gemini_api_key') || DEFAULT_GEMINI_API_KEY;
+    }
+
+    function toggleApiKeyPanel() {
+      const panel = document.getElementById('aiApiKeyPanel');
+      const input = document.getElementById('geminiApiKeyInput');
+      panel.classList.toggle('hidden');
+      if (!panel.classList.contains('hidden')) {
+        input.value = getGeminiApiKey();
+        input.focus();
+      }
+    }
+
+    function saveGeminiApiKey() {
+      const val = document.getElementById('geminiApiKeyInput').value.trim();
+      if (val) {
+        localStorage.setItem('smb_gemini_api_key', val);
+        document.getElementById('aiApiKeyPanel').classList.add('hidden');
+        updateAiBadgeStatus();
+        showToast('✅ Gemini API Key berhasil disimpan!');
+      } else {
+        localStorage.removeItem('smb_gemini_api_key');
+        updateAiBadgeStatus();
+        showToast('⚠️ API Key dihapus (Mode Offline Aktif)');
+      }
+    }
+
+    function updateAiBadgeStatus() {
+      const badge = document.getElementById('aiEngineBadge');
+      if (!badge) return;
+      if (getGeminiApiKey()) {
+        badge.innerText = 'GEMINI 2.5 ONLINE';
+        badge.className = 'px-2 py-0.5 rounded-full text-[9px] font-black bg-emerald-500/20 text-emerald-300 border border-emerald-500/40';
+      } else {
+        badge.innerText = 'LOCAL MODE (NO KEY)';
+        badge.className = 'px-2 py-0.5 rounded-full text-[9px] font-black bg-amber-500/20 text-amber-300 border border-amber-500/40';
+      }
+    }
+
     function toggleAiSidebar(show) {
       const sidebar = document.getElementById('aiSidebar');
       const backdrop = document.getElementById('aiSidebarBackdrop');
       const isOpen = !sidebar.classList.contains('translate-x-full');
       const targetState = (show !== undefined ? show : !isOpen);
+
+      updateAiBadgeStatus();
 
       if (targetState) {
         sidebar.classList.remove('translate-x-full');
@@ -1577,27 +1668,335 @@
       handleAiSubmit(new Event('submit'));
     }
 
-    function handleAiSubmit(e) {
+    async function handleAiSubmit(e) {
       if (e) e.preventDefault();
       const input = document.getElementById('aiInputPrompt');
+      const btn = document.getElementById('aiSubmitBtn');
       const q = input.value.trim();
       if (!q) return;
 
       input.value = '';
-
       appendAiChatMessage('user', q);
       const typingId = appendAiTypingIndicator();
+      if (btn) btn.disabled = true;
 
-      setTimeout(() => {
-        removeAiTypingIndicator(typingId);
-        const res = queryAIAssistant(q);
-        appendAiChatMessage('bot', res.text, res.actions);
+      try {
+        const apiKey = getGeminiApiKey();
+        let res;
 
-        // Execute agentic action automatically if returned!
-        if (res.autoMapHighlight) {
-          highlightMultiplePolygonsOnMap(res.autoMapHighlight.polyIds, res.autoMapHighlight.label);
+        if (apiKey) {
+          res = await callGeminiAgent(q, apiKey);
+        } else {
+          // Jika API Key belum diisi, gunakan mesin lokal yang sudah diperbaiki + beri info cara aktifkan Gemini
+          res = queryLocalFallbackAssistant(q);
+          res.text += `\n\n---\n💡 *Tips: Klik tombol **🔑 API** di bagian atas sidebar untuk memasukkan Gemini API Key agar saya bisa melakukan percakapan bebas & analisis mendalam.*`;
         }
-      }, 250);
+
+        removeAiTypingIndicator(typingId);
+        appendAiChatMessage('bot', res.text, res.actions);
+        executeAgenticDashboardActions(res);
+
+      } catch (err) {
+        removeAiTypingIndicator(typingId);
+        const fallback = queryLocalFallbackAssistant(q);
+        appendAiChatMessage(
+          'bot',
+          `⚠️ **Koneksi Gemini API Terkendala (${escapeHtml(err.message)})**\nMenampilkan hasil dari mesin data internal:\n\n` + fallback.text,
+          fallback.actions
+        );
+        executeAgenticDashboardActions(fallback);
+      } finally {
+        if (btn) btn.disabled = false;
+      }
+    }
+
+    // MEMBANGUN KONTEKS DATA DASHBOARD UNTUK SYSTEM INSTRUCTION GEMINI
+    function buildDashboardSystemPrompt() {
+      // Poligon tanpa array koordinat pts agar hemat token namun 100% lengkap secara atribut
+      const compactPolygons = POLYGONS.map(p => ({
+        id: p.id,
+        grp: p.grp,
+        petani: p.petani,
+        nik: p.nik,
+        desa: p.desa,
+        ha_klaim: p.ha,
+        ha_geodesik: p.geo_ha,
+        mata_benih: p.mata,
+        rit_truk: p.rit,
+        penangkar_suplai: p.suplai,
+        kode_smb: p.kode_smb,
+        nama_kebun_smb: p.smb_names,
+        rincian_alokasi_smb: p.smb_desc,
+        koord: `${p.lat},${p.lon}`
+      }));
+
+      // Cek progres pengiriman dari localStorage
+      const checkedDeliveries = [];
+      for (let i = 0; i < localStorage.length; i++) {
+        const k = localStorage.key(i);
+        if (k && k.startsWith('smb_check_') && localStorage.getItem(k) === 'true') {
+          checkedDeliveries.push(k.replace('smb_check_', ''));
+        }
+      }
+
+      const currentUiState = {
+        activeTab: activeTab,
+        selectedPolygonIdOnMap: selectedPolyId || "Tidak ada yang sedang diklik",
+        activeMapFilter: targetSmbFilter ? `Filter SMB: ${targetSmbFilter}` : mapFilter,
+        checkedOffDeliveriesCount: checkedDeliveries.length,
+        checkedOffDeliveriesList: checkedDeliveries
+      };
+
+      return `Anda adalah "Agentic AI Komando Distribusi Bibit Tebu SMB 2026" untuk wilayah Kecamatan Terusan Nunyai (Kampung Gunung Batin Udik & Gunung Batin Baru), Kabupaten Lampung Tengah.
+Anda tertanam langsung di dalam aplikasi WebGIS Interaktif yang mengelola 2 kelompok tani: Poktan Gunung Sari 6 (GS6) dan Harapan Mekar (HM).
+
+TUGAS UTAMA ANDA:
+1. Menjawab pertanyaan pengguna dengan akurat, analitis, dan luwes berdasarkan dataset dashboard di bawah ini (seperti melacak asal bibit petani, tujuan kirim plot SMB, audit selisih luas klaim vs geodesik KML, sisa kuota penangkar, prioritas sertifikat expired November Tb.1467, ritase logistik truk, hingga diskusi agronomi tebu, ekonomi pertanian, atau percakapan umum lainnya).
+2. Mengendalikan tampilan WebGIS secara otomatis melalui output JSON terstruktur:
+   - Jika jawaban Anda membahas satu atau beberapa poligon kebun spesifik (misal milik petani tertentu, asal bibit tertentu, atau hasil filter), masukkan ID poligonnya (contoh: ["GS6-38", "GS6-39"]) ke dalam properti "highlightPolygons" agar peta menyorot poligon tersebut secara otomatis!
+   - Berikan label deskriptif singkat pada "highlightLabel" (contoh: "Kebun Sriyanto (GS6-38, GS6-39)").
+   - Jika pengguna eksplisit meminta pindah tab (misal ke tabel tanam atau daftar kirim), isi "switchTab" dengan "map", "tanam", atau "bibit" (kosongkan "" jika tidak perlu).
+   - Jika pengguna meminta cetak/buka dokumen Surat Pengantar Bibit (SPB) untuk 1 poligon tertentu, isi "openSpbPolygonId" dengan ID poligonnya.
+
+ATURAN FORMAT TEKS ("reply"):
+- Gunakan Bahasa Indonesia yang cerdas, padat, terstruktur, dan gunakan poin-poin serta emotikon yang relevan (🌱, 📦, 📍, ➡️, ✅, ⚠️).
+- Jangan gunakan format LaTeX seperti $\\le$; gunakan simbol Unicode langsung seperti ≤, ≥, ×, ±.
+
+STATUS LAYAR PENGGUNA SAAT INI:
+${JSON.stringify(currentUiState)}
+
+DATA 1: NERACA REKAP 4 PENANGKAR BIBIT (REKAP_DATA):
+${JSON.stringify(REKAP_DATA)}
+
+DATA 2: DAFTAR 29 PLOT KEBUN BIBIT SERTIFIKAT MUTU BENIH (SMB_DATA):
+${JSON.stringify(SMB_DATA)}
+
+DATA 3: DAFTAR 112 POLIGON LOKASI TANAM PETANI (POLYGONS):
+${JSON.stringify(compactPolygons)}`;
+    }
+
+    // PEMANGGILAN API GEMINI 2.5 FLASH DENGAN STRUCTURED JSON SCHEMA
+    async function callGeminiAgent(userPrompt, apiKey) {
+      const url = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${encodeURIComponent(apiKey)}`;
+
+      // Tambahkan pesan terbaru ke riwayat multi-turn (batasi 10 giliran terakhir agar respons tetap kilat)
+      const contents = [
+        ...aiChatHistory.slice(-10),
+        { role: "user", parts: [{ text: userPrompt }] }
+      ];
+
+      const payload = {
+        systemInstruction: {
+          parts: [{ text: buildDashboardSystemPrompt() }]
+        },
+        contents: contents,
+        generationConfig: {
+          temperature: 0.25,
+          responseMimeType: "application/json",
+          responseSchema: {
+            type: "OBJECT",
+            properties: {
+              reply: {
+                type: "STRING",
+                description: "Jawaban lengkap berformat Markdown untuk ditampilkan di ruang chat."
+              },
+              highlightPolygons: {
+                type: "ARRAY",
+                items: { type: "STRING" },
+                description: "Daftar ID Poligon (misal ['GS6-07', 'HM-15']) yang relevan untuk langsung disorot di peta WebGIS. Kosongkan [] jika tidak relevan."
+              },
+              highlightLabel: {
+                type: "STRING",
+                description: "Label singkat untuk banner sorotan peta (misal 'Kebun Sriyanto' atau 'Tujuan Kirim Tb.1522')."
+              },
+              switchTab: {
+                type: "STRING",
+                description: "Isi dengan 'map', 'tanam', atau 'bibit' HANYA jika user meminta pindah tab, jika tidak kosongkan ''."
+              },
+              openSpbPolygonId: {
+                type: "STRING",
+                description: "Isi dengan 1 ID Poligon (misal 'GS6-38') HANYA jika user meminta buka/cetak SPB poligon tersebut, jika tidak kosongkan ''."
+              }
+            },
+            required: ["reply", "highlightPolygons", "highlightLabel"]
+          }
+        }
+      };
+
+      const response = await fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+
+      if (!response.ok) {
+        const errData = await response.json().catch(() => ({}));
+        throw new Error(errData.error?.message || `HTTP ${response.status}`);
+      }
+
+      const data = await response.json();
+      const rawText = data.candidates?.[0]?.content?.parts?.[0]?.text || "{}";
+      const parsed = JSON.parse(rawText);
+
+      // Simpan ke riwayat percakapan multi-turn
+      aiChatHistory.push({ role: "user", parts: [{ text: userPrompt }] });
+      aiChatHistory.push({ role: "model", parts: [{ text: parsed.reply || "" }] });
+
+      // Susun tombol aksi kontekstual secara otomatis dari hasil analisis Gemini
+      const actions = [];
+      const validPolys = (parsed.highlightPolygons || []).filter(id => POLYGONS.some(p => p.id === id));
+
+      if (validPolys.length === 1) {
+        const p = POLYGONS.find(x => x.id === validPolys[0]);
+        actions.push({
+          label: `🗺️ Fokus ${p.id} di Peta`,
+          fn: `toggleAiSidebar(false); selectPolygon('${p.id}', true);`
+        });
+        actions.push({
+          label: `📄 Buka SPB ${p.id}`,
+          fn: `toggleAiSidebar(false); selectPolygon('${p.id}', true); openSPBModalFromSelected();`
+        });
+        actions.push({
+          label: `🚗 Rute GPS`,
+          fn: `window.open('https://www.google.com/maps/dir/?api=1&destination=${p.lat},${p.lon}', '_blank')`
+        });
+      } else if (validPolys.length > 1) {
+        const safeIds = JSON.stringify(validPolys).replace(/"/g, "'");
+        const safeLbl = (parsed.highlightLabel || `${validPolys.length} Bidang`).replace(/'/g, "");
+        actions.push({
+          label: `📍 Lihat ${validPolys.length} Bidang di Peta`,
+          fn: `toggleAiSidebar(false); highlightMultiplePolygonsOnMap(${safeIds}, '${safeLbl}');`
+        });
+      }
+
+      return {
+        text: parsed.reply || "Maaf, saya tidak dapat memproses jawaban.",
+        autoMapHighlight: validPolys.length > 0 ? { polyIds: validPolys, label: parsed.highlightLabel || `${validPolys.length} Bidang` } : null,
+        switchTab: parsed.switchTab || "",
+        openSpbPolygonId: parsed.openSpbPolygonId || "",
+        actions: actions
+      };
+    }
+
+    // EKSEKUSI AKSI AGENTIC KE UI DASHBOARD
+    function executeAgenticDashboardActions(res) {
+      if (!res) return;
+      if (res.switchTab && ['map', 'tanam', 'bibit'].includes(res.switchTab)) {
+        switchMainTab(res.switchTab);
+      }
+      if (res.autoMapHighlight && res.autoMapHighlight.polyIds?.length > 0) {
+        highlightMultiplePolygonsOnMap(res.autoMapHighlight.polyIds, res.autoMapHighlight.label);
+      }
+      if (res.openSpbPolygonId) {
+        selectPolygon(res.openSpbPolygonId, true);
+        openSPBModalFromSelected();
+      }
+    }
+
+    // FALLBACK LOKAL YANG SUDAH DIPERBAIKI (JIKA OFFLINE / TANPA API KEY)
+    function queryLocalFallbackAssistant(promptText) {
+      const q = promptText.toLowerCase().trim();
+
+      // 1. Cek ID Poligon (GS6-XX atau HM-XX)
+      const mPoly = q.match(/\b(gs6-\d{1,2}|hm-\d{1,2})\b/);
+      if (mPoly) {
+        const pid = mPoly[1].toUpperCase();
+        const p = POLYGONS.find(x => x.id === pid);
+        if (p) {
+          const diff = (p.geo_ha - p.ha).toFixed(2);
+          return {
+            text: `📍 **Informasi Bidang Poligon ${p.id}**\n\n` +
+                  `• **Petani Penggarap**: **${p.petani}** (NIK: \`${p.nik}\`)\n` +
+                  `• **Kelompok**: ${p.grp === 'GS6' ? 'Gunung Sari 6' : 'Harapan Mekar'}\n` +
+                  `• **Luas Lahan**: **${p.ha.toFixed(2)} Ha** (Geodesik KML: ${p.geo_ha.toFixed(2)} Ha, selisih ${diff >= 0 ? '+' : ''}${diff} Ha)\n` +
+                  `• **Kebutuhan Benih**: **${p.mata.toLocaleString('id-ID')} Mata** (${p.rit.toFixed(1)} Rit Truk)\n` +
+                  `• **Kode SMB & Asal**: **${p.kode_smb}** — **${p.suplai}** (${p.smb_names})\n` +
+                  `• **Rincian Alokasi**: ${p.smb_desc}\n` +
+                  `• **Lokasi**: Desa ${p.desa}, Kec. ${p.kec} (\`${p.lat}, ${p.lon}\`)`,
+            autoMapHighlight: { polyIds: [p.id], label: `${p.id} (${p.petani})` },
+            actions: [
+              { label: `🗺️ Fokus ${p.id} di Peta`, fn: `toggleAiSidebar(false); selectPolygon('${p.id}', true);` }
+            ]
+          };
+        }
+      }
+
+      // 2. Cek Plot SMB (Diurutkan dari nama terpanjang ke terpendek agar "Feri 10" tidak tertabrak "Feri 1")
+      let targetSmb = null;
+      const mCode = q.match(/\btb\.?\s*(\d{4})\b/);
+      if (mCode) {
+        const c = "tb." + mCode[1];
+        targetSmb = SMB_DATA.find(s => s.kode_smb.toLowerCase() === c);
+      }
+      if (!targetSmb) {
+        const sortedSmb = [...SMB_DATA].sort((a, b) => b.nama_kebun.length - a.nama_kebun.length);
+        for (const s of sortedSmb) {
+          const nk = s.nama_kebun.toLowerCase();
+          const short = nk.replace(/setiawan\s*/, '').replace(/iswanto\s*/, '');
+          const regexShort = new RegExp(`\\b${short.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'i');
+          if (q.includes(nk) || regexShort.test(q)) {
+            targetSmb = s;
+            break;
+          }
+        }
+      }
+
+      if (targetSmb) {
+        const s = targetSmb;
+        const recLines = s.recipients.map(r => `• **${r.petani}**: **${r.luas_kirim.toFixed(2)} Ha** (${r.mata_benih.toLocaleString('id-ID')} Mata • ${r.ritase.toFixed(1)} Rit)\n  *Bidang: ${r.rincian_bidang}*`);
+        return {
+          text: `📦 **Detail Plot Bibit ${s.nama_kebun} (\`${s.kode_smb}\`)**\n\n` +
+                `• **Penangkar**: **${s.penangkar}** (${s.grp})\n` +
+                `• **Expired Sertifikat**: **${s.exp} 2026** ${s.is_nov ? '🔥 *(PRIORITAS #1)*' : ''}\n` +
+                `• **Serapan**: **${s.dikirim.toFixed(2)} Ha** dari potensi **${s.potensi.toFixed(2)} Ha** (Sisa: **${s.sisa.toFixed(2)} Ha**)\n\n` +
+                `**Penerima Alokasi (${s.recipients.length} Petani)**:\n` +
+                (recLines.length ? recLines.join('\n') : '*(Cadangan Utuh / Belum ada penugasan kirim)*'),
+          autoMapHighlight: { polyIds: s.polygons, label: `${s.kode_smb} (${s.nama_kebun})` },
+          actions: s.polygons.length > 0 ? [
+            { label: `📍 Lihat ${s.polygons.length} Poligon di Peta`, fn: `toggleAiSidebar(false); filterMapBySmbCode('${s.kode_smb}');` }
+          ] : []
+        };
+      }
+
+      // 3. Cek Nama Petani (Termasuk alias Yusup/Yusuf & tanpa blacklist kata depan)
+      const normalizedQ = q.replace(/\byusuf\b/g, 'yusup');
+      const allFarmers = [...new Set(POLYGONS.map(p => p.petani))].sort((a, b) => b.length - a.length);
+      let matchedFarmer = allFarmers.find(fn => normalizedQ.includes(fn.toLowerCase()));
+
+      if (!matchedFarmer) {
+        for (const fn of allFarmers) {
+          const tokens = fn.toLowerCase().split(/\s+/).filter(t => t.length >= 3);
+          if (tokens.some(t => new RegExp(`\\b${t}\\b`, 'i').test(normalizedQ))) {
+            matchedFarmer = fn;
+            break;
+          }
+        }
+      }
+
+      if (matchedFarmer) {
+        const fPolys = POLYGONS.filter(p => p.petani === matchedFarmer);
+        const totHa = fPolys.reduce((s, p) => s + p.ha, 0);
+        const totMata = fPolys.reduce((s, p) => s + p.mata, 0);
+        const polyLines = fPolys.map(p =>
+          `• **${p.id}** (${p.ha.toFixed(2)} Ha • ${p.mata.toLocaleString('id-ID')} Mata) ➡️ Asal: **${p.suplai}** (\`${p.kode_smb}\` - ${p.smb_names})`
+        );
+        return {
+          text: `🌱 **Lahan & Asal Bibit Petani: ${matchedFarmer}**\n\n` +
+                `• **NIK**: \`${fPolys[0].nik}\` • **Total**: **${fPolys.length} Bidang (${totHa.toFixed(2)} Ha / ${totMata.toLocaleString('id-ID')} Mata)**\n\n` +
+                polyLines.join('\n'),
+          autoMapHighlight: { polyIds: fPolys.map(p => p.id), label: `Kebun ${matchedFarmer}` },
+          actions: [
+            { label: `🗺️ Lihat di Peta`, fn: `toggleAiSidebar(false);` }
+          ]
+        };
+      }
+
+      return {
+        text: `🤖 **Mode Offline Aktif**\nMasukkan **Gemini API Key** melalui tombol **🔑 API** di bagian atas sidebar agar saya dapat menelaah seluruh data dengan bahasa natural dan menjawab pertanyaan bebas.`,
+        actions: [
+          { label: "🔑 Masukkan Gemini API Key", fn: "toggleApiKeyPanel()" }
+        ]
+      };
     }
 
     function appendAiChatMessage(sender, text, actions = []) {
@@ -1654,7 +2053,7 @@
       div.className = 'flex items-center gap-2 max-w-full text-xs theme-muted pl-8';
       div.innerHTML = `
         <span class="inline-block w-2 h-2 rounded-full bg-cyan-400 animate-ping"></span>
-        <span class="font-semibold text-cyan-300">Asisten AI memeriksa database alokasi...</span>
+        <span class="font-semibold text-cyan-300">Gemini 2.5 sedang menelaah data dashboard...</span>
       `;
       container.appendChild(div);
       container.scrollTop = container.scrollHeight;
@@ -1666,6 +2065,7 @@
     }
 
     function clearChatHistory() {
+      aiChatHistory = [];
       const container = document.getElementById('aiChatMessages');
       container.innerHTML = `
         <div class="flex items-start gap-2 max-w-full">
@@ -1673,242 +2073,12 @@
             🤖
           </div>
           <div class="theme-card border rounded-2xl rounded-tl-sm p-3 space-y-1.5 shadow-sm text-xs leading-relaxed">
-            <div class="font-extrabold text-cyan-400">Percakapan Dibersihkan</div>
-            <p>Silakan tanyakan kembali hal seputar alokasi bibit tebu SMB 2026!</p>
+            <div class="font-extrabold text-cyan-400">Memori Percakapan Direset</div>
+            <p>Riwayat konteks telah dibersihkan. Silakan mulai topik atau instruksi baru!</p>
           </div>
         </div>
       `;
-      showToast('Chat AI dibersihkan');
-    }
-
-    // AGENTIC NATURAL LANGUAGE PROCESSOR (100% CLIENT-SIDE & FAST)
-    function queryAIAssistant(promptText) {
-      const q = promptText.toLowerCase().trim();
-
-      // 1. Match Polygon ID: GS6-XX or HM-XX
-      const mPoly = q.match(/\b(gs6-\d{1,2}|hm-\d{1,2})\b/);
-      if (mPoly) {
-        const pid = mPoly[1].toUpperCase();
-        const p = POLYGONS.find(x => x.id === pid);
-        if (p) {
-          const diff = (p.geo_ha - p.ha).toFixed(2);
-          return {
-            text: `📍 **Informasi Bidang Poligon ${p.id}**\n\n` +
-                  `• **Petani Penggarap**: **${p.petani}**\n` +
-                  `• **NIK**: \`${p.nik}\`\n` +
-                  `• **Kelompok**: ${p.grp === 'GS6' ? 'Gunung Sari 6' : 'Harapan Mekar'}\n` +
-                  `• **Luas Lahan**: **${p.ha.toFixed(2)} Ha** (Geodesik KML: ${p.geo_ha.toFixed(2)} Ha, selisih ${diff >= 0 ? '+' : ''}${diff} Ha)\n` +
-                  `• **Kebutuhan Benih**: **${p.mata.toLocaleString('id-ID')} Mata** (Estimasi: ${p.rit.toFixed(1)} Rit Truk)\n` +
-                  `• **Kode SMB**: **${p.kode_smb}**\n` +
-                  `• **Penangkar Asal**: **${p.suplai}** (${p.smb_names})\n` +
-                  `• **Lokasi Kebun**: Desa ${p.desa}, Kec. ${p.kec}\n` +
-                  `• **Koordinat GPS**: \`${p.lat}, ${p.lon}\``,
-            autoMapHighlight: { polyIds: [p.id], label: `${p.id} (${p.petani})` },
-            actions: [
-              { label: `🗺️ Fokus ${p.id} di Peta`, fn: `toggleAiSidebar(false); selectPolygon('${p.id}', true);` },
-              { label: "🚗 Rute Google Maps", fn: `window.open('https://www.google.com/maps/dir/?api=1&destination=${p.lat},${p.lon}', '_blank')` }
-            ]
-          };
-        }
-      }
-
-      // 2. Check Priority Exp Nov
-      if (['november', 'prioritas', 'kadaluarsa', 'exp nov', 'habis pertama'].some(w => q.includes(w))) {
-        const novSmb = SMB_DATA.filter(s => s.is_nov);
-        if (novSmb.length > 0) {
-          const s = novSmb[0];
-          const recNames = s.recipients.map(r => `${r.petani} (${r.luas_kirim} Ha)`).join(', ');
-          return {
-            text: `🔥 **PLOT PRIORITAS WAJIB #1: EXP NOVEMBER 2026**\n\n` +
-                  `• **Kode SMB**: **\`${s.kode_smb}\`**\n` +
-                  `• **Nama Kebun Bibit**: **${s.nama_kebun}**\n` +
-                  `• **Penangkar**: **${s.penangkar}**\n` +
-                  `• **Masa Berlaku Sertifikat**: **November 2026** *(Wajib habis disalurkan paling awal sebelum plot Desember!)*\n` +
-                  `• **Total Alokasi Kirim**: **${s.dikirim.toFixed(2)} Ha** (154.200 Mata • ${s.dikirim.toFixed(2)} Rit)\n` +
-                  `• **Petani Penerima**: ${recNames}\n` +
-                  `• **Bidang Tujuan**: **HM-15** (Desa GUNUNG BATIN UDIK)`,
-            autoMapHighlight: { polyIds: s.polygons, label: 'Prioritas Exp Nov (Tb.1467)' },
-            actions: [
-              { label: "🗺️ Lihat HM-15 di Peta", fn: "toggleAiSidebar(false); selectPolygon('HM-15', true);" },
-              { label: "📦 Buka di Daftar Kirim", fn: "toggleAiSidebar(false); filterMapBySmbCode('Tb.1467');" }
-            ]
-          };
-        }
-      }
-
-      // 3. Check Quota / Sisa Kuota Penangkar
-      if (['sisa', 'sisa kuota', 'kuota', 'stok', 'cadangan', 'neraca', 'potensi salur'].some(w => q.includes(w))) {
-        for (const pName of ['agus', 'darmawan', 'feri', 'yusuf']) {
-          if (q.includes(pName)) {
-            const rekap = REKAP_DATA.find(r => r.penangkar.toLowerCase().includes(pName));
-            if (rekap) {
-              return {
-                text: `📊 **Neraca Kuota Bibit Penangkar ${rekap.penangkar}**\n\n` +
-                      `• **Rentang Kode SMB**: \`${rekap.smb_range}\`\n` +
-                      `• **Jumlah Plot**: **${rekap.total_plot} Plot** (${rekap.plot_terpakai} terpakai, ${rekap.plot_cadangan} cadangan utuh)\n` +
-                      `• **Luas Lahan Bibit**: ${rekap.luas_bibit.toFixed(2)} Ha\n` +
-                      `• **Total Potensi Salur Kotor**: **${rekap.potensi_salur.toFixed(2)} Ha**\n` +
-                      `• **Realisasi Ditugaskan**: **${rekap.total_dikirim.toFixed(2)} Ha**\n` +
-                      `• **Sisa Kuota Surplus / Cadangan**: **${rekap.sisa_kuota.toFixed(2)} Ha**\n` +
-                      `• **Tingkat Serapan**: **${rekap.serapan_pct}%**`,
-                actions: [
-                  { label: `📦 Buka Plot ${rekap.penangkar} di Daftar Kirim`, fn: `toggleAiSidebar(false); setBibitFilter('${rekap.penangkar}'); switchMainTab('bibit');` }
-                ]
-              };
-            }
-          }
-        }
-      }
-
-      // 4. Check SMB Plot Destination (e.g. "bibit feri 1 kirim kemana saja?")
-      let targetSmb = null;
-      const mCode = q.match(/\btb\.?\s*(\d{4})\b/);
-      if (mCode) {
-        const c = "tb." + mCode[1];
-        targetSmb = SMB_DATA.find(s => s.kode_smb.toLowerCase() === c);
-      }
-
-      if (!targetSmb) {
-        for (const s of SMB_DATA) {
-          const nk = s.nama_kebun.toLowerCase();
-          const short = nk.replace(/setiawan\s*/, '').replace(/iswanto\s*/, '');
-          if (q.includes(short) || q.includes(nk)) {
-            targetSmb = s;
-            break;
-          }
-        }
-      }
-
-      if (targetSmb && ['kirim', 'tujuan', 'kemana', 'siapa', 'penerima', 'disalurkan', 'plot', 'bibit', 'alokasi'].some(w => q.includes(w))) {
-        const s = targetSmb;
-        const recLines = s.recipients.map(r => `• **${r.petani}**: **${r.luas_kirim.toFixed(2)} Ha** (${r.mata_benih.toLocaleString('id-ID')} Mata • ${r.ritase.toFixed(1)} Rit)\n  *Bidang: ${r.rincian_bidang}*`);
-        const recText = recLines.length > 0 ? recLines.join('\n') : "*(Plot ini merupakan cadangan surplus utuh, belum ada penugasan kirim)*";
-        const novBadge = s.is_nov ? "🔥 **WAJIB PRIORITAS #1 (EXP NOVEMBER 2026)**\n" : "";
-
-        return {
-          text: `📦 **Daftar Alokasi & Tujuan Kirim Plot ${s.nama_kebun}**\n\n` +
-                `${novBadge}` +
-                `• **Kode SMB**: **\`${s.kode_smb}\`**\n` +
-                `• **Penangkar Asal**: **${s.penangkar}**\n` +
-                `• **Kelompok Tujuan**: ${s.grp}\n` +
-                `• **Masa Berlaku Sertifikat**: **${s.exp} 2026**\n` +
-                `• **Status**: ${s.status_chip}\n` +
-                `• **Realisasi Serapan**: **${s.dikirim.toFixed(2)} Ha** dari potensi **${s.potensi.toFixed(2)} Ha** (Sisa: ${s.sisa.toFixed(2)} Ha)\n\n` +
-                `**Petani & Bidang Penerima (${s.recipients.length} Penerima)**:\n${recText}`,
-          autoMapHighlight: { polyIds: s.polygons, label: `${s.kode_smb} (${s.nama_kebun})` },
-          actions: [
-            { label: `📍 Lihat ${s.polygons.length} Poligon di Peta`, fn: `toggleAiSidebar(false); filterMapBySmbCode('${s.kode_smb}');` },
-            { label: "📦 Rincian di Tab Kirim", fn: `toggleAiSidebar(false); switchMainTab('bibit'); document.getElementById('searchBibitInput').value='${s.kode_smb}'; renderBibitTab();` }
-          ]
-        };
-      }
-
-      // 5. Check Farmer Name (e.g. "kebun sriyanto bibit darimana ya?")
-      let matchedFarmer = null;
-      const allFarmers = [...new Set(POLYGONS.map(p => p.petani))].sort((a, b) => b.length - a.length);
-
-      for (const fn of allFarmers) {
-        if (q.includes(fn.toLowerCase())) {
-          matchedFarmer = fn;
-          break;
-        }
-      }
-
-      if (!matchedFarmer) {
-        for (const fn of allFarmers) {
-          const tokens = fn.toLowerCase().split(/\s+/).filter(t => t.length >= 4 && !['andi', 'agus', 'feri', 'yusuf'].includes(t));
-          if (tokens.some(t => q.includes(t))) {
-            matchedFarmer = fn;
-            break;
-          }
-        }
-      }
-
-      if (matchedFarmer) {
-        const fPolys = POLYGONS.filter(p => p.petani === matchedFarmer);
-        const totHa = fPolys.reduce((s, p) => s + p.ha, 0);
-        const totMata = fPolys.reduce((s, p) => s + p.mata, 0);
-        const totRit = fPolys.reduce((s, p) => s + p.rit, 0);
-
-        const polyLines = fPolys.map(p =>
-          `• **Bidang ${p.id}** (${p.ha.toFixed(2)} Ha • ${p.mata.toLocaleString('id-ID')} Mata • ${p.rit.toFixed(1)} Rit)\n` +
-          `  - **Kode SMB**: \`${p.kode_smb}\`\n` +
-          `  - **Asal Penangkar**: **${p.suplai}** (${p.smb_names})\n` +
-          `  - **Lokasi**: Desa ${p.desa}, Kec. ${p.kec}\n` +
-          `  - **Koordinat**: \`${p.lat}, ${p.lon}\``
-        );
-
-        const fPolyIds = fPolys.map(p => p.id);
-        const actions = fPolys.slice(0, 2).map(p => ({
-          label: `🗺️ Fokus ${p.id} di Peta`,
-          fn: `toggleAiSidebar(false); selectPolygon('${p.id}', true);`
-        }));
-        actions.push({
-          label: "📊 Lihat di Tabel Tanam",
-          fn: `toggleAiSidebar(false); switchMainTab('tanam'); document.getElementById('searchTanamInput').value='${matchedFarmer}'; renderTanamTab();`
-        });
-
-        return {
-          text: `🌱 **Asal Bibit & Kebun Petani ${matchedFarmer}**\n\n` +
-                `• **NIK**: \`${fPolys[0].nik}\`\n` +
-                `• **Kelompok**: ${fPolys[0].grp === 'GS6' ? 'Gunung Sari 6' : 'Harapan Mekar'}\n` +
-                `• **Total Kepemilikan Lahan**: **${fPolys.length} Bidang** seluas **${totHa.toFixed(2)} Ha**\n` +
-                `• **Total Kebutuhan Benih**: **${totMata.toLocaleString('id-ID')} Mata** (~${totRit.toFixed(1)} Rit Truk)\n\n` +
-                `**Rincian Bidang Kebun & Asal Sertifikat Bibit**:\n` + polyLines.join('\n\n'),
-          autoMapHighlight: { polyIds: fPolyIds, label: `Kebun ${matchedFarmer}` },
-          actions: actions
-        };
-      }
-
-      // 6. Check Limit > 5 Ha
-      if (['5 ha', '5ha', 'melebihi', 'batas', 'di atas 5', 'lebih 5'].some(w => q.includes(w))) {
-        const farmerSums = {};
-        POLYGONS.forEach(p => {
-          farmerSums[p.petani] = (farmerSums[p.petani] || 0) + p.ha;
-        });
-        const overFarmers = Object.entries(farmerSums).filter(([_, ha]) => ha > 5.0001);
-
-        if (overFarmers.length > 0) {
-          const lines = overFarmers.map(([fn, ha]) => `• **${fn}**: **${ha.toFixed(2)} Ha**`).join('\n');
-          return {
-            text: `⚠️ **Daftar Petani dengan Luas Lahan Melebihi 5.00 Ha**:\n\n${lines}\n\n` +
-                  `*Catatan: Petani dengan kepemilikan >5.00 Ha memerlukan validasi administrasi kelayakan bantuan tebu program SMB 2026.*`,
-            actions: [
-              { label: "👥 Buka Rekap Petani", fn: "toggleAiSidebar(false); switchMainTab('tanam'); setTanamSubView('rekap');" }
-            ]
-          };
-        } else {
-          return {
-            text: "✅ **Seluruh petani dalam kelompok ini memiliki luas lahan $\le 5.00$ Ha** (Memenuhi kualifikasi kuota program SMB 2026).",
-            actions: [{ label: "👥 Buka Rekap Petani", fn: "toggleAiSidebar(false); switchMainTab('tanam'); setTanamSubView('rekap');" }]
-          };
-        }
-      }
-
-      // 7. Fallback General Overview
-      const totHa = POLYGONS.reduce((s, p) => s + p.ha, 0);
-      const totMata = POLYGONS.reduce((s, p) => s + p.mata, 0);
-      const totRit = POLYGONS.reduce((s, p) => s + p.rit, 0);
-
-      return {
-        text: `🤖 **Asisten AI WebGIS Distribusi Bibit SMB 2026**\n\n` +
-              `Halo! Saya asisten cerdas acuan distribusi bibit tebu SMB 2026. Anda dapat menanyakan langsung pertanyaan operasional lapangan:\n\n` +
-              `• *"Bibit Feri 1 kirim kemana saja?"*\n` +
-              `• *"Kebun Sriyanto bibit darimana ya?"*\n` +
-              `• *"Plot mana yang wajib exp November?"*\n` +
-              `• *"Berapa sisa kuota penangkar Agus / Feri?"*\n` +
-              `• *"Siapa saja petani dengan luas di atas 5 Ha?"*\n` +
-              `• *"Info poligon GS6-08 / HM-15"*\n\n` +
-              `**Ringkasan Data Scope ${PROJECT_CODE}**:\n` +
-              `• ${POLYGONS.length} Poligon Bidang • ${[...new Set(POLYGONS.map(p => p.petani))].length} Petani Penggarap\n` +
-              `• Total Luas: **${totHa.toFixed(2)} Ha** • Benih: **${totMata.toLocaleString('id-ID')} Mata** (${totRit.toFixed(1)} Rit Truk)\n` +
-              `• ${SMB_DATA.length} Plot Sertifikat Mutu Benih (SMB)`,
-        actions: [
-          { label: "🌾 Contoh: Bibit Feri 1 kirim kemana?", fn: "submitAiPrompt('Bibit Feri 1 kirim kemana saja?')" },
-          { label: "🌱 Contoh: Kebun Sriyanto bibit darimana?", fn: "submitAiPrompt('Kebun Sriyanto bibit darimana ya?')" },
-          { label: "🔥 Contoh: Plot Prioritas Exp Nov", fn: "submitAiPrompt('Plot prioritas exp nov apa saja?')" }
-        ]
-      };
+      showToast('🗑️ Memori percakapan AI dibersihkan');
     }
 
     function formatAiMarkdown(text) {
@@ -1922,7 +2092,6 @@
     function escapeHtml(str) {
       return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
     }
-
     // MAIN TAB NAVIGATION (3 CORE TABS)
     function switchMainTab(tab) {
       activeTab = tab;
